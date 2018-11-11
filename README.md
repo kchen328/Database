@@ -3,3 +3,5 @@ Uses Python and SQL to create a database that keeps track of a company's employe
 Has employee information in one table, job positions in another.
 1. To start new tables, run method create_tables().
 2. Follow the instuctions on the console to add or delete a job position or employee.
+3. Enter information based on ID.
+4. Link the two tables by linking the job to an employee ID.
