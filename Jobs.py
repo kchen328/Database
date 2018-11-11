@@ -10,8 +10,8 @@ def create_tables():
     #create cursor
     cursor = conn.cursor()
     #delete current tables
-    cursor.execute("drop table job")
-    cursor.execute("drop table employee")
+    cursor.execute("DROP TABLE job")
+    cursor.execute("DROP TABLE employee")
     #create and execute tables
     cursor.execute("""create table employee (
                         id integer primary key autoincrement,
@@ -58,7 +58,9 @@ def main():
     ask = raw_input("""What would you like to do?
                         1: Assign an employee
                         2: Add a new position
-                        3: See information\n""")
+                        3: Remove employee
+                        4: Remove job position
+                        5: See information\n""")
     
     if ask == "1":
         print "Welcome! Please enter the employee information."
@@ -68,7 +70,7 @@ def main():
         print "The available jobs are: "
         for row in result:
             print """ID: {0}
-Name: {1}
+First Name: {1}
 Salary: {2}""".format(row[0], row[1], row[2])
         selected_job= raw_input("Assign this employee to an available job. Enter the id: ")
         selected_job = int(float(selected_job))
@@ -82,6 +84,39 @@ Salary: {2}""".format(row[0], row[1], row[2])
     elif ask == "2":
         print "Please enter the information about the new job position."
         cursor.execute(job_info())
+    elif ask == "3":
+        print "These are the employees: "
+        sql = cursor.execute("select * from employee")
+        result = sql.fetchall()
+        for row in result:
+            print """ID: {0}
+First Name: {1}
+Last Name: {2}
+Age: {3}
+Gender: {4}
+Experience: {5}""".format(row[0], row[1], row[2], row[3], row[4], row[5])
+        selected_employee= raw_input("Select the employee to remove. Enter the id: ")
+        selected_employee = int(float(selected_employee))
+        sql = """delete from employee where id = {}""".format(selected_employee)
+        cursor.execute(sql)
+        sql = """update job
+                    set employee_id = null
+                    where employee_id = {}""".format(selected_employee)
+        cursor.execute(sql)
+        print "The employee is removed."
+    elif ask == "4":
+        print "These are the jobs: "
+        sql = cursor.execute("select * from job")
+        result = sql.fetchall()
+        for row in result:
+            print """ID: {0}
+Name: {1}
+Salary: {2}""".format(row[0], row[1], row[2])
+        selected_job= raw_input("Select the position to remove. Enter the id: ")
+        selected_job = int(float(selected_job))
+        sql = """delete from job where id = {}""".format(selected_job)
+        cursor.execute(sql)
+        print "The job position is removed."
     else:
         input = raw_input(""""Would you like to see the job or employee list?
                                 Type 1 for job and 2 for employee:\n""")
